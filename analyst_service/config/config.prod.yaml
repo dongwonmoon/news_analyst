@@ -16,8 +16,5 @@ kafka:
 
     topic_modeler:
       group_id: "topic-modeler-group"
-      model_path: "models/bertopic_model" # 컨테이너 내부 경로 기준
-
-    db_loader:
-      group_id: "db-loader-group"
+      model_path: "models/bertopic_model"
   

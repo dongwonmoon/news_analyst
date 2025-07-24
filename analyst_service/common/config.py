@@ -7,7 +7,7 @@ def load_config():
     env = os.getenv("ENV", "dev")  # dev, prod
 
     # 서비스 루트 디렉토리를 __file__ 기준으로 계산 (로컬/컨테이너 모두 호환)
-    # analyst_service/common/config.py -> analyst_service/
+    # analyst_service
     service_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     dotenv_path = os.path.join(service_root, f".env.{env}")
@@ -29,7 +29,7 @@ def load_config():
     )
     config["kafka"]["services"]["topic_modeler"]["model_path"] = absolute_model_path
 
-    # --- 데이터베이스 설정 (기존 로직 유지) ---
+    # --- 데이터베이스 설정 ---
     # 'database' 키가 config에 없을 경우를 대비
     if "database" not in config:
         config["database"] = {}
@@ -39,7 +39,7 @@ def load_config():
         if os.getenv(env_var):
             config["database"][key] = os.getenv(env_var)
 
-    # --- Kafka 설정 (기존 로직 유지) ---
+    # --- Kafka 설정 ---
     kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS")
     if kafka_bootstrap_servers:
         config["kafka"]["bootstrap_servers"] = kafka_bootstrap_servers

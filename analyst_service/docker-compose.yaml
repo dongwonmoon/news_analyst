@@ -11,3 +11,14 @@ services:
     env_file:
       - .env.dev
     restart: always
+
+  sentiment-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sentiment-analyzer
+    command: python -m sentiment_analyzer.consumer
+    # .env.dev 파일을 사용하도록 환경 설정
+    env_file:
+      - .env.dev
+    restart: always

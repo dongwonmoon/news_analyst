@@ -2,3 +2,4 @@ pyyaml
 python-dotenv
 kafka-python
 krwordrank
+transformers

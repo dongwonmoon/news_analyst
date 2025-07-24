@@ -46,7 +46,12 @@ class KeywordExtractorConsumer(BaseConsumer):
 
 
 if __name__ == "__main__":
+    """
+    sentiment에서 받아서 keyword 컬럼 추가.
+    """
     consumer = KeywordExtractorConsumer(
-        input_topic_key="topic_raw", service_config_key="keyword_extractor"
+        input_topic_key="topic_with_sentiment",
+        output_topic_key="topic_with_keywords",
+        service_config_key="keyword_extractor",
     )
     consumer.run()
