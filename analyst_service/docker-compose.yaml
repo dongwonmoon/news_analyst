@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  keyword-extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: keyword-extractor
+    command: python -m keyword_extractor.consumer
+    # .env.dev 파일을 사용하도록 환경 설정
+    env_file:
+      - .env.dev
+    restart: always

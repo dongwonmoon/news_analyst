@@ -1,0 +1,23 @@
+kafka:
+  bootstrap_servers: "kafka:9092"
+  # Pipeline Topics
+  topic_raw: "news.raw"
+  topic_with_sentiment: "news.with_sentiment"
+  topic_with_keywords: "news.with_keywords"
+  topic_processed: "news.processed" # 최종 결과 토픽
+
+  services:
+    sentiment_analyzer:
+      group_id: "sentiment-analyzer-group"
+      model_name: "matthewburke/korean_sentiment"
+
+    keyword_extractor:
+      group_id: "keyword-extractor-group"
+
+    topic_modeler:
+      group_id: "topic-modeler-group"
+      model_path: "models/bertopic_model" # 컨테이너 내부 경로 기준
+
+    db_loader:
+      group_id: "db-loader-group"
+  

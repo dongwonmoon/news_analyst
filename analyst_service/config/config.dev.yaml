@@ -1,0 +1,23 @@
+kafka:
+  bootstrap_servers: "localhost:29092" # 기본값. .env.dev 파일로 덮어쓸 수 있습니다.
+  # Pipeline Topics
+  topic_raw: "news.raw"
+  topic_with_sentiment: "news.with_sentiment"
+  topic_with_keywords: "news.with_keywords"
+  topic_processed: "news.processed" # 최종 결과 토픽
+
+  services:
+    sentiment_analyzer:
+      group_id: "sentiment-analyzer-group"
+      model_name: "matthewburke/korean_sentiment"
+
+    keyword_extractor:
+      group_id: "keyword-extractor-group-test2"
+
+    topic_modeler:
+      group_id: "topic-modeler-group"
+      model_path: "models/bertopic_model" # 컨테이너 내부 경로 기준
+
+    db_loader:
+      group_id: "db-loader-group"
+  
