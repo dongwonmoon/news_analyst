@@ -9,11 +9,16 @@ logger = logging.getLogger(__name__)
 
 
 class TopicModelingConsumer(BaseConsumer):
-    def __init__(self):
+    def __init__(
+        self,
+        input_topic_key: str,
+        output_topic_key: str = None,
+        service_config_key: str = None,
+    ):
         super().__init__(
-            input_topic_key="topic_with_keywords",
-            output_topic_key="topic_processed",
-            service_config_key="topic_modeler",
+            input_topic_key=input_topic_key,
+            output_topic_key=output_topic_key,
+            service_config_key=service_config_key,
         )
         # BERTopic 모델 로드
         model_path = self.service_config["model_path"]
@@ -48,5 +53,9 @@ class TopicModelingConsumer(BaseConsumer):
 
 
 if __name__ == "__main__":
-    consumer = TopicModelingConsumer()
+    consumer = TopicModelingConsumer(
+        input_topic_key="topic_with_keywords",
+        output_topic_key="topic_processed",
+        service_config_key="topic_modeler",
+    )
     consumer.run()
