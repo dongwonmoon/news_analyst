@@ -135,10 +135,11 @@ def news_embedding_clustering_dag():
             return
 
         hook = PostgresHook(postgres_conn_id="postgres_default")
-        sql = "UPDATE analyzed_news SET cluster_id = %s WHERE url = %s"
-        params = [(item["cluster_id"], item["url"]) for item in permanent_clusters]
-
-        hook.run(sql, parameters=params)
+        sql = "UPDATE analyzed_news SET cluster_id = %(cluster_id)s WHERE url = %(url)s"
+        hook.run(
+            None,
+            handler=lambda cur: cur.executemany(sql, permanent_clusters),
+        )
         logger.info(
             f"총 {len(permanent_clusters)}개 기사의 영구 클러스터 ID를 업데이트했습니다."
         )
