@@ -1,0 +1,9 @@
+pyyaml
+python-dotenv
+kafka-python
+krwordrank
+transformers
+psycopg2-binary
+sentence-transformers
+apache-airflow
+apache-airflow-providers-postgres

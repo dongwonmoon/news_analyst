@@ -1,0 +1,22 @@
+FROM postgres:13
+
+# 1) 인증서 + 빌드 툴 설치
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      git \
+      build-essential \
+      postgresql-server-dev-13 \
+ && update-ca-certificates \
+\
+# 2) pgvector 소스 복제 및 빌드
+ && git clone --depth 1 https://github.com/pgvector/pgvector.git /usr/src/pgvector \
+ && cd /usr/src/pgvector \
+ && make && make install \
+\
+# 3) 정리
+ && cd / \
+ && rm -rf /usr/src/pgvector \
+ && apt-get purge -y --auto-remove \
+      git build-essential postgresql-server-dev-13 \
+ && rm -rf /var/lib/apt/lists/*
