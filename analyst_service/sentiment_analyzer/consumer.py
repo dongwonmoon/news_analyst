@@ -7,6 +7,9 @@ from common.base_consumer import BaseConsumer
 logger = logging.getLogger(__name__)
 
 
+import numpy as np
+
+
 class SentimentAnalyzerConsumer(BaseConsumer):
     def __init__(
         self,
@@ -27,6 +30,39 @@ class SentimentAnalyzerConsumer(BaseConsumer):
         )
         logger.info("감성 분석 모델 로드 완료.")
 
+    def analyze_sentiment_in_chunks(
+        self, text: str, chunk_size: int = 500, overlap: int = 50
+    ) -> dict:
+        """긴 텍스트를 조각내어 감성 분석을 실행하고, 평균 점수를 반환합니다."""
+
+        # 텍스트가 chunk_size보다 작거나 같으면 바로 분석
+        if len(text) <= chunk_size:
+            return self.sentiment_pipeline(text)[0]
+
+        # 텍스트를 조각(chunk)으로 나눔
+        chunks = []
+        for i in range(0, len(text), chunk_size - overlap):
+            chunks.append(text[i : i + chunk_size])
+
+        # 각 조각에 대해 감성 분석 실행
+        results = self.sentiment_pipeline(chunks)
+
+        # 점수 평균 계산
+        # positive를 1, negative를 -1로 변환하여 평균 계산
+        scores = []
+        for res in results:
+            if res[0]["score"] >= 0.5:
+                scores.append(res[0]["score"])
+            else:
+                scores.append(
+                    1 - res[0]["score"]
+                )  # 부정 점수는 1에서 빼서 긍정 점수로 변환
+
+        avg_score = np.mean(scores)
+        final_label = "positive" if avg_score >= 0.5 else "negative"
+
+        return {"label": final_label, "score": avg_score}
+
     def process_message(self, article: dict) -> dict:
         logger.info(f"Received message: {article.get('id')}")
         content = article.get("content", "")
@@ -35,11 +71,11 @@ class SentimentAnalyzerConsumer(BaseConsumer):
             return None
 
         # 감성 분석
-        result = self.sentiment_pipeline(content[:512])[0]
+        result = self.analyze_sentiment_in_chunks(content)
         logger.info(f"Sentiment analysis result: {result}")
 
         # 피처 추가
-        article["sentiment"] = "positive" if result["score"] > 0.5 else "negative"
+        article["sentiment"] = result["label"]
         article["sentiment_score"] = result["score"]
         logger.info(f"Sending message with sentiment: {article.get('id')}")
 
