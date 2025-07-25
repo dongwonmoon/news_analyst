@@ -365,6 +365,7 @@ services:
   dashboard:
     build:
       context: ./dashboard # dashboard의 Dockerfile 참조
+      dockerfile: Dockerfile
     restart: always
     ports: ["8501:8501"]
     depends_on:

@@ -32,7 +32,7 @@ def news_embedding_clustering_dag():
         """
         unclustered_records = hook.get_records(unclustered_sql)
         unclustered_articles = [
-            {"url": r[0], "embedding": np.array(r[1])} for r in unclustered_records
+            {"url": r[0], "embedding": r[1]} for r in unclustered_records
         ]
 
         # 2. ID 매핑 기준: 최근 2시간 내에 이미 ID가 할당된 기사
@@ -45,8 +45,6 @@ def news_embedding_clustering_dag():
 
         logger.info(f"군집화 대상 신규 기사: {len(unclustered_articles)}건")
         logger.info(f"ID 매핑 기준 기사: {len(recent_cluster_map)}건")
-        logger.info(type(unclustered_articles))
-        logger.info(type(recent_cluster_map))
 
         return {"unclustered": unclustered_articles, "recent_map": recent_cluster_map}
 
