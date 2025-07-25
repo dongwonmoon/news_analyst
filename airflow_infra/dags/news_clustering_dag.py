@@ -45,6 +45,8 @@ def news_embedding_clustering_dag():
 
         logger.info(f"군집화 대상 신규 기사: {len(unclustered_articles)}건")
         logger.info(f"ID 매핑 기준 기사: {len(recent_cluster_map)}건")
+        logger.info(type(unclustered_articles))
+        logger.info(type(recent_cluster_map))
 
         return {"unclustered": unclustered_articles, "recent_map": recent_cluster_map}
 
