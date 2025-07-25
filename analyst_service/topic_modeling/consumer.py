@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class EmbeddingGenerator(BaseConsumer):
+class TopicModelingConsumer(BaseConsumer):
     """
     Kafka에서 메시지를 받아 임베딩을 생성하고, PostgreSQL의 analyzed_news 테이블에 저장하는 컨슈머.
     """
@@ -36,6 +36,7 @@ class EmbeddingGenerator(BaseConsumer):
         BaseConsumer의 추상 메소드를 구현합니다.
         """
         try:
+            print("Doing...")
             content_to_embed = message.get("content", "")
             if not content_to_embed:
                 logger.warning("메시지에 content가 없어 임베딩을 생성할 수 없습니다.")
@@ -54,8 +55,8 @@ class EmbeddingGenerator(BaseConsumer):
                 "summary": message.get("summary"),
                 "content": message.get("content"),
                 "news_time": message.get("time"),
-                "sentiment": message.get("sentiment", {}).get("label"),
-                "sentiment_score": message.get("sentiment", {}).get("score"),
+                "sentiment": message.get("sentiment", ""),
+                "sentiment_score": message.get("sentiment_score", 0),
                 "keywords": message.get("keywords"),
                 "embedding": embedding,
             }
@@ -100,7 +101,7 @@ class EmbeddingGenerator(BaseConsumer):
 
 
 if __name__ == "__main__":
-    consumer = EmbeddingGenerator(
+    consumer = TopicModelingConsumer(
         input_topic_key="topic_with_keywords",
         output_topic_key=None,
         service_config_key="topic_modeler",

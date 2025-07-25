@@ -58,7 +58,7 @@ class BaseConsumer(ABC):
                     for message in consumer_records:
                         try:
                             processed_data = self.process_message(message.value)
-                            print(processed_data)
+
                             if self.output_topic and processed_data:
                                 self.producer.send(
                                     self.output_topic, value=processed_data
