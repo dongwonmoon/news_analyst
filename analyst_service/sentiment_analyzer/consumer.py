@@ -51,6 +51,7 @@ class SentimentAnalyzerConsumer(BaseConsumer):
         # positive를 1, negative를 -1로 변환하여 평균 계산
         scores = []
         for res in results:
+            print(res)
             if res[0]["score"] >= 0.5:
                 scores.append(res[0]["score"])
             else:
