@@ -51,12 +51,11 @@ class SentimentAnalyzerConsumer(BaseConsumer):
         # positive를 1, negative를 -1로 변환하여 평균 계산
         scores = []
         for res in results:
-            print(res)
-            if res[0]["score"] >= 0.5:
-                scores.append(res[0]["score"])
+            if res["score"] >= 0.5:
+                scores.append(res["score"])
             else:
                 scores.append(
-                    1 - res[0]["score"]
+                    1 - res["score"]
                 )  # 부정 점수는 1에서 빼서 긍정 점수로 변환
 
         avg_score = np.mean(scores)
