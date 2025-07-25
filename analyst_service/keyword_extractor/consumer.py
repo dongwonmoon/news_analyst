@@ -19,6 +19,7 @@ class KeywordExtractorConsumer(BaseConsumer):
             output_topic_key=output_topic_key,
             service_config_key=service_config_key,
         )
+        logger.info("KeywordExtractorConsumer is initialized.")
 
     def extract_keywords(self, texts, top_n=5):
         """주어진 텍스트에서 상위 N개의 키워드를 추출합니다."""
@@ -31,6 +32,7 @@ class KeywordExtractorConsumer(BaseConsumer):
         return [word for word, score in sorted_keywords[:top_n]]
 
     def process_message(self, article: dict) -> dict:
+        logger.info(f"Received message: {article.get('id')}")
         content = article.get("content", "")
         if not content:
             logger.warning("내용이 없는 기사, 건너뜁니다.")
@@ -38,9 +40,11 @@ class KeywordExtractorConsumer(BaseConsumer):
 
         # 핵심 로직: 키워드 추출
         keywords = self.extract_keywords([content])
+        logger.info(f"Extracted keywords: {keywords}")
 
         # 원본 데이터에 추출된 키워드 추가
         article["keywords"] = keywords
+        logger.info(f"Sending message with keywords: {article.get('id')}")
 
         return article
 
