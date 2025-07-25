@@ -51,12 +51,15 @@ def news_embedding_clustering_dag():
     @task
     def perform_temporary_clustering(unclustered_articles: list[dict]) -> list[dict]:
         """가져온 기사에 대해 HDBSCAN을 실행하여 임시 클러스터 ID를 부여합니다."""
+        import json
+
         if not unclustered_articles or len(unclustered_articles) < 3:
             logger.info("군집화할 기사가 부족하여 태스크를 건너뜁니다.")
             return []
 
         embeddings = np.array(
-            [np.array(article["embedding"]) for article in unclustered_articles]
+            [json.loads(article["embedding"]) for article in unclustered_articles],
+            dtype=float,
         )
         clusterer = HDBSCAN(
             min_cluster_size=3, metric="cosine", allow_single_cluster=True
