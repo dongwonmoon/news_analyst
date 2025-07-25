@@ -22,3 +22,14 @@ services:
     env_file:
       - .env.dev
     restart: always
+
+  topic-modeling:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: topic-modeling
+    command: python -m topic_modeling.consumer
+    # .env.dev 파일을 사용하도록 환경 설정
+    env_file:
+      - .env.dev
+    restart: always

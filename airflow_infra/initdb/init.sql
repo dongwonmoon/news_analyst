@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+
 CREATE TABLE IF NOT EXISTS naver_news (
     id SERIAL PRIMARY KEY,
     url TEXT UNIQUE,
@@ -8,6 +10,7 @@ CREATE TABLE IF NOT EXISTS naver_news (
     section_id INT
 );
 
+-- 최종 분석 데이터를 저장할 테이블 생성
 CREATE TABLE IF NOT EXISTS analyzed_news (
     url VARCHAR(255) PRIMARY KEY,
     section_id INT,
@@ -18,5 +21,10 @@ CREATE TABLE IF NOT EXISTS analyzed_news (
     sentiment VARCHAR(50),
     sentiment_score FLOAT,
     keywords TEXT[],
-    topic_id INT -- Topic ID ?
+    embedding VECTOR(768),
+    cluster_id INT
 );
+
+CREATE INDEX IF NOT EXISTS analyzed_news_embedding_idx ON analyzed_news USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+CREATE SEQUENCE IF NOT EXISTS cluster_id_seq START 1;
