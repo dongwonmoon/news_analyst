@@ -135,16 +135,17 @@ def news_embedding_clustering_dag():
             return
 
         hook = PostgresHook(postgres_conn_id="postgres_default")
-        sql = """
-        UPDATE analyzed_news 
-        SET cluster_id = %(cluster_id)s 
-        WHERE url = %(url)s
-        """
-        hook.run(
-            [sql],
-            autocommit=True,
-            handler=lambda cur: cur.executemany(sql, permanent_clusters),
-        )
+        conn = hook.get_conn()  # ← Hook으로 커넥션만 얻어옵니다
+        with conn.cursor() as cur:
+            cur.executemany(
+                """
+                UPDATE analyzed_news
+                SET cluster_id = %(cluster_id)s
+                WHERE url = %(url)s
+                """,
+                permanent_clusters,  # 리스트 오브 딕트 그대로 넘겨도 OK
+            )
+        conn.commit()
         logger.info(
             f"총 {len(permanent_clusters)}개 기사의 영구 클러스터 ID를 업데이트했습니다."
         )
