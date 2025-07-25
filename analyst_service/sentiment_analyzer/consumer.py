@@ -28,16 +28,20 @@ class SentimentAnalyzerConsumer(BaseConsumer):
         logger.info("감성 분석 모델 로드 완료.")
 
     def process_message(self, article: dict) -> dict:
+        logger.info(f"Received message: {article.get('id')}")
         content = article.get("content", "")
         if not content:
+            logger.warning("내용이 없는 기사, 건너뜁니다.")
             return None
 
         # 감성 분석
         result = self.sentiment_pipeline(content[:512])[0]
+        logger.info(f"Sentiment analysis result: {result}")
 
         # 피처 추가
         article["sentiment"] = "positive" if result["score"] > 0.5 else "negative"
         article["sentiment_score"] = result["score"]
+        logger.info(f"Sending message with sentiment: {article.get('id')}")
 
         return article
 

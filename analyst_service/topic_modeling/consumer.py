@@ -36,7 +36,7 @@ class TopicModelingConsumer(BaseConsumer):
         BaseConsumer의 추상 메소드를 구현합니다.
         """
         try:
-            print("Doing...")
+            logger.info(f"Received message: {message.get('id')}")
             content_to_embed = message.get("content", "")
             if not content_to_embed:
                 logger.warning("메시지에 content가 없어 임베딩을 생성할 수 없습니다.")
@@ -46,6 +46,7 @@ class TopicModelingConsumer(BaseConsumer):
             embedding = self.model.encode(
                 content_to_embed, convert_to_tensor=False
             ).tolist()
+            logger.info(f"Embedding created for message: {message.get('id')}")
 
             # DB에 저장할 데이터 준비
             record = {
@@ -60,7 +61,7 @@ class TopicModelingConsumer(BaseConsumer):
                 "keywords": message.get("keywords"),
                 "embedding": embedding,
             }
-
+            logger.info(f"Saving record to DB: {record.get('url')}")
             self.save_to_db(record)
 
         except Exception as e:
