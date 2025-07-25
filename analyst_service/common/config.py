@@ -4,14 +4,18 @@ from dotenv import load_dotenv
 
 
 def load_config():
-    env = os.getenv("ENV", "dev")  # dev, prod
-
-    # 서비스 루트 디렉토리를 __file__ 기준으로 계산 (로컬/컨테이너 모두 호환)
-    # analyst_service
+    # 서비스 루트 디렉토리 (analyst_service)
     service_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    # 프로젝트 루트 디렉토리 (news_analyst)
+    project_root = os.path.dirname(service_root)
 
-    dotenv_path = os.path.join(service_root, f".env.{env}")
-    load_dotenv(dotenv_path=dotenv_path, override=True)
+    # 프로젝트 루트의 .env 파일 로드
+    dotenv_path = os.path.join(project_root, ".env")
+    load_dotenv(dotenv_path=dotenv_path)
+
+    # ENV 변수를 .env 파일에서 읽어옴
+    env = os.getenv("ENV", "dev")
 
     # 설정 파일 경로 계산
     config_path = os.path.join(service_root, f"config/config.{env}.yaml")

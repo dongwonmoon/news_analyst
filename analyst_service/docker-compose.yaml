@@ -9,7 +9,7 @@ services:
     command: python -m keyword_extractor.consumer
     # .env.dev 파일을 사용하도록 환경 설정
     env_file:
-      - .env.dev
+      - ../.env
     restart: always
 
   sentiment-analyzer:
@@ -20,7 +20,7 @@ services:
     command: python -m sentiment_analyzer.consumer
     # .env.dev 파일을 사용하도록 환경 설정
     env_file:
-      - .env.dev
+      - ../.env
     restart: always
 
   topic-modeling:
@@ -31,5 +31,5 @@ services:
     command: python -m topic_modeling.consumer
     # .env.dev 파일을 사용하도록 환경 설정
     env_file:
-      - .env.dev
+      - ../.env
     restart: always
