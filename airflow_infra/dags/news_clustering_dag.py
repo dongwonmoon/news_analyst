@@ -56,7 +56,7 @@ def news_embedding_clustering_dag():
             return []
 
         embeddings = np.array(
-            [article["embedding"] for article in unclustered_articles]
+            [np.array(article["embedding"]) for article in unclustered_articles]
         )
         clusterer = HDBSCAN(
             min_cluster_size=3, metric="cosine", allow_single_cluster=True
