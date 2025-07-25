@@ -141,7 +141,8 @@ def news_embedding_clustering_dag():
         WHERE url = %(url)s
         """
         hook.run(
-            sql,
+            [sql],
+            autocommit=True,
             handler=lambda cur: cur.executemany(sql, permanent_clusters),
         )
         logger.info(
