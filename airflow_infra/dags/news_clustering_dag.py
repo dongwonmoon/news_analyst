@@ -135,7 +135,11 @@ def news_embedding_clustering_dag():
             return
 
         hook = PostgresHook(postgres_conn_id="postgres_default")
-        sql = "UPDATE analyzed_news SET cluster_id = %(cluster_id)s WHERE url = %(url)s"
+        sql = """
+        UPDATE analyzed_news 
+        SET cluster_id = %(cluster_id)s 
+        WHERE url = %(url)s
+        """
         hook.run(
             None,
             handler=lambda cur: cur.executemany(sql, permanent_clusters),
